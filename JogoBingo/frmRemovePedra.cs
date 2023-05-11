@@ -42,7 +42,7 @@ namespace JogoBingo
 
             if (retorno == "OK")
             {
-                AddLog($"Remoção da pedra {pedra} pelo operador");
+                AddLog($"Remocao da pedra {pedra}");
             }
         }
 

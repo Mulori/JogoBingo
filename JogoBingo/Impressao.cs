@@ -18,6 +18,7 @@ namespace JogoBingo
             {
                 var dataTableJogo = banco.Query($"select * from jogo where numero_jogo = '{numero}'", out string retorno_jogo);
                 var dataTableJogoPedra = banco.Query($"select * from jogo_pedra where numero_jogo = '{dataTableJogo.Rows[0]["numero_jogo"]}'", out string retorno_jogo_pedra);
+                var dataTableJogoLog = banco.Query($"select * from jogo_log where numero_jogo = '{dataTableJogo.Rows[0]["numero_jogo"]}' order by id asc", out string retorno_jogo_log);
 
                 SerialPort _serialPort = new SerialPort();
                 _serialPort.PortName = VG.porta_impressora;
@@ -58,12 +59,28 @@ namespace JogoBingo
                 }
 
                 print.SetAlignCenter();
+                print.WriteLine("");
+                print.WriteLine("Historico");
+                print.WriteLine("--------------------------------------------");
+
+                foreach (DataRow item in dataTableJogoLog.Rows)
+                {
+                    print.SetAlignCenter();
+                    print.WriteLine($"{item["data_hora"].ToString()} | {item["historico"].ToString()}");
+                }
+
+                print.SetAlignCenter();
                 print.LineFeed();
-              
-                print.WriteLine("RCR Sistemas");
+                print.LineFeed();
+                print.LineFeed();
+                print.WriteLine("* RCR Sistemas *");
                 print.WriteLine(Convert.ToChar(27).ToString() + Convert.ToChar(109).ToString());
 
                 _serialPort.Close();
+
+                dataTableJogo = null;
+                dataTableJogoPedra = null;
+                dataTableJogoLog = null;
 
                 return true;
             }
